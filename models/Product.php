@@ -5,13 +5,13 @@
         protected $description;
         protected $imageUrl;
         protected $price;
-        protected $category;
+        public $category;
 
         function __construct(String $name, String $description,String $imageUrl, Float $price, Category $category) {
             $this->name = $name;
             $this->description = $description;
             $this->imageUrl = $imageUrl;
-            $this->price = empty($_SESSION['name']) ? $price : $this->getDiscount($price);
+            $this->price = $price;
             $this->category = $category;
         }
 
@@ -38,15 +38,11 @@
             $this->imageUrl = $imageUrl;
         }
         
-        public function getPrice() : Float {
-            return $this->price;
+        public function getPrice($logged) : Float {
+            return $logged ? $this->price -= ($this->price * (20 / 100)) : $this->price;
         }
 
         public function setPrice(Float $price) : void {
             $this->price = $price;
-        }
-
-        protected function getDiscount($price) : Float {
-            return $price -= ($price * (20 / 100));
         }
     }

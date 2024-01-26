@@ -1,4 +1,6 @@
 <?php 
+    require_once __DIR__ ."/../db/productsDB.php";
+
     if (session_status() === PHP_SESSION_NONE){
         session_start();
     }
@@ -12,6 +14,9 @@
         <title>Homepage</title>
         <!-- Boostrap CDN -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="../style/products.css">
     </head>
     <body>
         <nav class="navbar bg-body-tertiary">
@@ -40,5 +45,43 @@
                 <?php } ?>
             </div>
         </nav>
+
+        <main>
+            <div class="container mt-5">
+                <div class="row">
+                    <?php foreach($products as $product) { ?>
+                    <div class="col-4">
+                        <div class="card h-100">
+                            <img src="<?php echo $product->getImageUrl(); ?>" class="card-img-top" alt="<?php echo $product->getName(); ?>' image">
+                            <div class="card-body">
+                                <h5 class="card-title"><?php echo $product->getName(); ?></h5>
+                                <p class="card-text"><?php echo $product->getDescription(); ?></p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>Category:</strong> <?php echo $product->category->getName(); ?></li>
+                                <?php if(is_a($product, 'Food')) { ?>
+
+                                <li class="list-group-item"><strong>Calories:</strong> <?php echo $product->getCalories(); ?></li>
+                                <li class="list-group-item"><strong>Fats:</strong> <?php echo $product->getFats(); ?></li>
+
+                                <?php } elseif(is_a($product, 'Toy')) { ?>
+
+                                <li class="list-group-item"><strong>Material:</strong> <?php echo $product->getMaterial(); ?></li>
+
+                                <?php } elseif(is_a($product, 'Kennel')) { ?>
+
+                                <li class="list-group-item"><strong>Size:</strong> <?php echo $product->getSize(); ?></li>
+
+                                <?php } ?>
+                            </ul>
+                            <div class="card-body">
+                                <a href="#" class="btn btn-primary">Buy for <strong><?php echo $product->getPrice(isset($_SESSION['id'])); ?>&euro;</strong></a>
+                            </div>
+                        </div>
+                    </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </main>
     </body>
 </html>
